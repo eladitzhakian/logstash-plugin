@@ -16,7 +16,7 @@ public class LogstashDao extends HostBasedLogstashIndexerDao {
   public void push(String data) throws IOException {
     DatagramSocket logstashClientSocket = new DatagramSocket();
     byte[] buffer = data.getBytes(StandardCharsets.UTF_8);
-    InetAddress address = InetAddress.getByAddress(getHost().getBytes(StandardCharsets.UTF_8));
+    InetAddress address = InetAddress.getByName(getHost());
     DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, getPort());
     logstashClientSocket.send(packet);
     logstashClientSocket.close();

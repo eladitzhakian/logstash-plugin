@@ -28,13 +28,13 @@ public class Logstash extends HostBasedLogstashIndexer<LogstashDao>
     @Override
     public String getDisplayName()
     {
-      return "Logstash TCP";
+      return "Logstash UDP";
     }
 
     @Override
     public int getDefaultPort()
     {
-      return 9000;
+      return 1666;
     }
 
   }

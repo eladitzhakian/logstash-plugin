@@ -1,8 +1,9 @@
 package jenkins.plugins.logstash.persistence;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.Socket;
+import java.net.DatagramSocket;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 
 public class LogstashDao extends HostBasedLogstashIndexerDao {
@@ -13,14 +14,11 @@ public class LogstashDao extends HostBasedLogstashIndexerDao {
 
   @Override
   public void push(String data) throws IOException {
-
-    try (Socket logstashClientSocket = new Socket(getHost(), getPort()))
-    {
-      OutputStream out = logstashClientSocket.getOutputStream();
-      out.write(data.getBytes(StandardCharsets.UTF_8));
-      out.write(10);
-      out.flush();
-      out.close();
-    }
+    DatagramSocket logstashClientSocket = new DatagramSocket();
+    byte[] buffer = data.getBytes(StandardCharsets.UTF_8);
+    InetAddress address = InetAddress.getByAddress(getHost().getBytes(StandardCharsets.UTF_8));
+    DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, getPort());
+    logstashClientSocket.send(packet);
+    logstashClientSocket.close();
   }
 }
